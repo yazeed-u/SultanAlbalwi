@@ -1,0 +1,242 @@
+// The First Class
+
+
+package sultan78;
+import javafx.application.Application;
+import static javafx.application.Application.launch;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.text.Font;
+import javafx.stage.Stage;
+import javafx.scene.layout.HBox;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Label;
+import javafx.geometry.Insets;
+import javafx.scene.layout.VBox;
+import java.util.ArrayList;
+import javafx.scene.layout.Priority;
+import javafx.stage.FileChooser;
+import java.io.File;
+import java.io.FileWriter;
+import javafx.geometry.Pos;
+import javafx.scene.layout.StackPane;
+
+public class Sultan78 extends Application {
+private float _Balance = 0;
+private float _earning = 0;
+private float _InterestRate = 0;
+private Button _But = new Button();
+private TextArea _text;
+private TextField _TextFirst  = new TextField();
+private TextField _TextSecond = new TextField();
+private Button[] _aarBut = {new Button() , new Button()};
+private ArrayList<String> _ArrText = new ArrayList<String>();
+
+    private HBox DitTextArea(){
+        HBox Box = new HBox();
+       _text = new TextArea();
+       Box.setAlignment(Pos.CENTER);
+       
+       _text.setTranslateX(10);
+      
+       _text.setPrefSize(500, 200);
+       _text.setWrapText(false);
+       
+       
+       Box.getChildren().add(_text);
+       
+       return Box;
+    }
+    private HBox TheHidearOfProject(){
+    Label lab1 = new Label("Initial Balance");
+    Label lab2 = new Label("Interest Rate");
+    
+    
+    HBox P1 = new HBox(10);
+    
+    P1.setAlignment(Pos.CENTER);
+    P1.setMargin(lab1 , new Insets(10 , 0 , 0 , 30));
+    P1.setMargin(_TextFirst , new Insets(10 , 5 , 0 , 0));
+    P1.setMargin(lab2 , new Insets(10 , 0 , 0 , 30));
+    P1.setMargin(_TextSecond , new Insets(10 , 5 , 0 , 0));
+    P1.getChildren().addAll(lab1 , _TextFirst , lab2 , _TextSecond);
+    
+    return P1;
+    }
+    private void AnnualProfitCalculation(float Balance){
+    
+        _earning = Balance * (_InterestRate / 100);
+        _Balance += _earning;
+    }
+    private VBox LongButtonWidth(String Text , Button but){
+        but.setText(Text);
+        VBox root = new VBox();
+        
+        but.setMaxWidth(Double.MAX_VALUE);
+
+        VBox.setVgrow(but, Priority.ALWAYS);
+        
+        VBox.setMargin(but, new Insets(10, 10, 20, 10));
+        
+        root.getChildren().add(but);
+    
+    return root;
+    }
+    private VBox SaveAllParentOfProject(){
+     VBox ArrBox[] = new VBox[5];
+       
+        
+         ArrBox[0] = new VBox (TheHidearOfProject());
+         ArrBox[1] = (LongButtonWidth("Calcluite" , _aarBut[0]));
+         ArrBox[2] = new VBox(clsDitingTexts.TheLablesInTheBody());
+         ArrBox[3] = new VBox(DitTextArea());
+          _aarBut[0].setOnAction(new CalacuiteButton());
+         ArrBox[4] = new VBox(LongButtonWidth("Export" , _aarBut[1]));
+        
+        return new VBox(ArrBox);
+    }
+    private void SaveDateInsideFile(Stage stage){
+    
+         FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("UserFile");
+
+        
+        File file = fileChooser.showSaveDialog(stage);
+
+        if (file != null) {
+            try {
+                FileWriter fileWriter = new FileWriter(file);
+                
+                for (String S : _ArrText){
+                
+                    fileWriter.write(S);
+                    fileWriter.write("\n");
+                }
+               fileWriter.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    @Override
+    public void start(Stage primaryStage) {
+       
+    VBox root = SaveAllParentOfProject(); 
+    
+    _aarBut[1].setOnAction( (event) -> {
+    
+        SaveDateInsideFile(primaryStage);
+    });
+       
+        Scene scene = new Scene(root, 600, 400);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("TextField Example");
+        primaryStage.show();
+        
+        
+    }
+    
+    
+    public static void main(String[] args) {
+        launch(args);
+        
+    }
+    
+    public class CalacuiteButton implements EventHandler<ActionEvent>{
+        private  boolean b1 = true;
+         private short Count = 0;
+         
+         private void PrintDataInsideTextArea(String Text){
+             
+             _text.appendText(Text);
+             _text.appendText("\n");
+         }
+         private void CalacuiteNumbersByUseButton(){
+         
+             
+                 
+         if (b1){
+         _InterestRate = Float.parseFloat(_TextSecond.getText());
+         _Balance  = Float.parseFloat(_TextFirst.getText());
+           
+         b1 = false;
+         }
+         AnnualProfitCalculation(_Balance);
+         
+         String CountText = String.valueOf(++Count);
+         String earningText = "SR" + String.valueOf(_earning);
+         String BalanceText = "SR" + String.valueOf(_Balance);
+         
+         clsDitingTexts.arrlab[0].setText(CountText);
+         clsDitingTexts.arrlab[1].setText(earningText);
+         clsDitingTexts.arrlab[2].setText(BalanceText);
+         
+        
+         _ArrText.add("Year#: " +CountText+ " You earned: " + earningText + 
+                 " and your total Balance is: " + BalanceText);
+         
+         PrintDataInsideTextArea("Year#: " +CountText+ " You earned: " + earningText + 
+                 " and your total Balance is: " + BalanceText);
+         }
+    
+    @Override
+    public void handle(ActionEvent event){
+        CalacuiteNumbersByUseButton();
+    }
+    }
+}
+
+// Second Class
+
+package sultan78;
+
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.scene.Scene;
+import javafx.scene.text.Font;
+import javafx.stage.Stage;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.layout.Priority;
+import javafx.scene.paint.Color;
+import javafx.scene.layout.VBox;
+public class clsDitingTexts {
+    public static Label arrlab[] = {new Label("") , new Label("") , new Label("")};
+    
+     public static Label[] DitingForFirstText(String T1 , String T2 , String T3){
+     arrlab[0].setText(T1);arrlab[1].setText(T2);arrlab[2].setText(T3);
+     
+     arrlab[0].setTextFill(Color.RED);arrlab[1].setTextFill(Color.RED);arrlab[2].setTextFill(Color.RED);
+      
+     
+    arrlab[0].setFont(new Font(30));arrlab[1].setFont(new Font(30));arrlab[2].setFont(new Font(30));
+    return arrlab;
+    }
+      public static Label[] DitingForSecondText(String T1 , String T2 , String T3){
+      Label arrlab22[] = {new Label(T1) , new Label(T2) , new Label(T3)};
+       arrlab22[0].setTextFill(Color.RED);arrlab22[1].setTextFill(Color.RED);arrlab22[2].setTextFill(Color.RED);
+    return arrlab22;
+      }
+      public static HBox TheLablesInTheBody(){
+       HBox Box = new HBox(20);
+       
+      
+      arrlab = DitingForFirstText("0" , "0" , "0");
+      Label arrlab22[] = DitingForSecondText("Years", "Current Year earnings", "Total balance");
+      VBox arrBox[] = {new VBox(20) , new VBox(20) , new VBox(20)};
+        
+      arrBox[0].getChildren().addAll(arrlab[0] , arrlab22[0]);
+      arrBox[1].getChildren().addAll(arrlab[1] , arrlab22[1]);
+      arrBox[2].getChildren().addAll(arrlab[2] , arrlab22[2]);
+      
+      Box.getChildren().addAll(arrBox);
+      Box.setAlignment(Pos.CENTER);
+      
+      return Box;
+      }
+}
